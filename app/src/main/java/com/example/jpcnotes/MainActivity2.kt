@@ -10,8 +10,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -54,12 +57,19 @@ class MainActivity2: ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    NotesList(viewModel)
+                    val navController = rememberNavController()
+                    NavHost(navController = navController, startDestination = "Home") {
+                        composable("home") { HomeScreen() }
+                        composable("preps") { PrepsScreen() }
+                        composable("profile") { ProfileScreen() }
+                    }
+
+                    BNBInit(navController)
                 }
             }
         }
     }
-
+/*
     @Composable
     fun BottomNavigationExample() {
         val navController = rememberNavController()
@@ -195,41 +205,63 @@ class MainActivity2: ComponentActivity() {
         }
 
     }
+    */
+
+
+
 }
 
+@Composable
+fun BNBInit(navController: NavController)
+{
+    NavigationBar {
+        NavigationBarItem(selected = true,
+            onClick = {
+                navController.navigate("home")
+            },
+            icon = {
+                Icon(Icons.Filled.Home,
+                    contentDescription = "Home")
+            },
+            label = { Text(text = "Главная")}
+        )
+
+        NavigationBarItem(selected = false,
+            onClick = {
+                navController.navigate("preps")
+            },
+            icon = {
+                Icon(Icons.Filled.List,
+                    contentDescription = "Preps")
+            },
+            label = { Text(text = "Препараты")}
+        )
+
+        NavigationBarItem(selected = false,
+            onClick = {
+                navController.navigate("profile")
+            },
+            icon = {
+                Icon(Icons.Filled.AccountBox,
+                    contentDescription = "Profile")
+            },
+            label = { Text(text = "Профиль")}
+        )
+
+    }
+}
 
 @Composable
 fun HomeScreen() {
-    // Контент для экрана 'Home'
-    // Например:
-    Text(text = "Home Screen", modifier = Modifier.fillMaxSize())
+    // Контент главного экрана
 }
 
 @Composable
-fun FavoritesScreen() {
-    // Контент для экрана 'Favorites'
-    Text(text = "Favorites Screen", modifier = Modifier.fillMaxSize())
+fun PrepsScreen() {
+    // Контент экрана настроек
 }
 
 @Composable
 fun ProfileScreen() {
-    // Контент для экрана 'Profile'
-    Text(text = "Profile Screen", modifier = Modifier.fillMaxSize())
-}
-
-
-@Composable
-fun Greeting2(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview2() {
-    JPCNotesTheme {
-        Greeting2("Android")
-    }
+    // Контент экрана настроек
 }

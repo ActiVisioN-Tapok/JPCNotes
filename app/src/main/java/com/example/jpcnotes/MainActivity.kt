@@ -184,6 +184,7 @@ class MainActivity : ComponentActivity() {
             }
 
             when (userState) {
+
                 is UserState.Loading -> {
                     LoadingComponent()
                 }
