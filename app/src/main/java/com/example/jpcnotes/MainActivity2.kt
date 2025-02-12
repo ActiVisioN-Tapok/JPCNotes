@@ -1,11 +1,18 @@
 package com.example.jpcnotes
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,6 +22,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
+import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -23,22 +31,30 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.jpcnotes.data.model.UserState
 import com.example.jpcnotes.data.network.SupabaseClient.client
 import com.example.jpcnotes.ui.theme.JPCNotesTheme
 import io.github.jan.supabase.postgrest.from
@@ -69,199 +85,144 @@ class MainActivity2: ComponentActivity() {
             }
         }
     }
-/*
-    @Composable
-    fun BottomNavigationExample() {
-        val navController = rememberNavController()
-        val bottomNavController = rememberSaveable { navController }
-
-        Scaffold(
-            bottomBar = {
-                BottomNavigationBar(bottomNavController)
-            }
-        ) { innerPadding ->
-            NavHost(
-                navController = bottomNavController,
-                startDestination = "home",
-                Modifier.padding(innerPadding)
-            ) {
-                composable("home") { HomeScreen() }
-                composable("favorites") { FavoritesScreen() }
-                composable("profile") { ProfileScreen() }
-            }
-        }
-    }
-
-    @Composable
-    fun BottomNavigationBar(navController: NavController) {
-        NavigationBar {
-            NavigationBarItem(
-                label = { Text("Home") },
-                icon = { Icon(imageVector = Icons.Filled.Home, contentDescription = null) },
-                selected = false,  // Здесь можно использовать состояние для выбора
-                onClick = {
-                    navController.navigate("home") {
-                        popUpTo("home") { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-            )
-            NavigationBarItem(
-                label = { Text("Favorites") },
-                icon = { Icon(imageVector = Icons.Filled.Favorite, contentDescription = null) },
-                selected = false,
-                onClick = {
-                    navController.navigate("favorites") {
-                        popUpTo("home") { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-            )
-            NavigationBarItem(
-                label = { Text("Profile") },
-                icon = { Icon(imageVector = Icons.Filled.Person, contentDescription = null) },
-                selected = false,
-                onClick = {
-                    navController.navigate("profile") {
-                        popUpTo("home") { saveState = true }
-                        launchSingleTop = true
-                        restoreState = true
-                    }
-                }
-            )
-        }
-    }
-    @Composable
-    fun NotesList(viewModel: SupabaseAuthViewModel) {
-        val notes = remember { mutableStateListOf<MainActivity.Note>() }
-        LaunchedEffect(Unit) {
-            withContext(Dispatchers.IO) {
-                val results = client.from("notes").select().decodeList<MainActivity.Note>()
-                notes.addAll(results)
-            }
-        }
-        Column {
-            Row {
-                Button(
-                    colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-                    onClick = {
-                        viewModel.logout(this@MainActivity2)
-                    },
-                    shape = RoundedCornerShape(10.dp),
-                    modifier = Modifier.width(383.dp)
-                )
-                {
-                    Text(text = "Logout", color = Color(255, 255, 255))
-                }
-            }
-            BottomNavigationExample()
-            /*
-            LazyColumn {
-                items(notes)
-                { note ->
-                    ListItem(headlineContent = {
-                        Text(
-                            text = note.body,
-                            modifier = Modifier.padding(vertical = 12.dp)
-                        )
-                    })
-                }
-            }
-
-
-
-            var newNote by remember { mutableStateOf("") }
-            val composableScope = rememberCoroutineScope()
-            Row {
-                OutlinedTextField(value = newNote, onValueChange = {newNote = it})
-                Button(onClick = {
-                    composableScope.launch(Dispatchers.IO) {
-                        val note = client.from("notes").insert(mapOf("body" to newNote))
-                        {
-                            select()
-                            single()
-                        }
-                            .decodeAs<MainActivity.Note>()
-                        notes.add(note)
-                        newNote =""
-                    }
-                }) {
-                    Text(text = "Save")
-                }
-            }
-
-            Row {
-                Button(onClick = {
-                    val win3 = Intent(this@MainActivity2, MainActivity3::class.java)
-                    startActivity(win3)
-                }) {
-                    Text(text = "Images")
-                }
-            }
-*/
-
-        }
-
-    }
-    */
-
-
-
 }
 
 @Composable
 fun BNBInit(navController: NavController)
 {
-    NavigationBar {
-        NavigationBarItem(selected = true,
-            onClick = {
-                navController.navigate("home")
-            },
-            icon = {
-                Icon(Icons.Filled.Home,
-                    contentDescription = "Home")
-            },
-            label = { Text(text = "Главная")}
-        )
+    Box(
+        modifier = Modifier.fillMaxWidth()
+            .height(50.dp),
+        contentAlignment = Alignment.BottomCenter
+    )
+    {
+        NavigationBar {
+            NavigationBarItem(selected = false,
+                onClick = {
+                    navController.navigate("home")
+                },
+                icon = {
+                    Icon(Icons.Filled.Home,
+                        contentDescription = "Home")
+                },
+                label = { Text(text = "Главная")}
+            )
 
-        NavigationBarItem(selected = false,
-            onClick = {
-                navController.navigate("preps")
-            },
-            icon = {
-                Icon(Icons.Filled.List,
-                    contentDescription = "Preps")
-            },
-            label = { Text(text = "Препараты")}
-        )
+            NavigationBarItem(selected = false,
+                onClick = {
+                    navController.navigate("preps")
+                },
+                icon = {
+                    Icon(Icons.Filled.List,
+                        contentDescription = "Preps")
+                },
+                label = { Text(text = "Препараты")}
+            )
 
-        NavigationBarItem(selected = false,
-            onClick = {
-                navController.navigate("profile")
-            },
-            icon = {
-                Icon(Icons.Filled.AccountBox,
-                    contentDescription = "Profile")
-            },
-            label = { Text(text = "Профиль")}
-        )
+            NavigationBarItem(selected = false,
+                onClick = {
+                    navController.navigate("profile")
+                },
+                icon = {
+                    Icon(Icons.Filled.AccountBox,
+                        contentDescription = "Profile")
+                },
+                label = { Text(text = "Профиль")}
+            )
 
+        }
     }
 }
 
 @Composable
 fun HomeScreen() {
-    // Контент главного экрана
+    Text(text = "Домашний экран")
+    Log.e("Out", "Home")
 }
 
 @Composable
 fun PrepsScreen() {
-    // Контент экрана настроек
-}
+        val context = LocalContext.current
+
+
+        var userEmail by remember { mutableStateOf("") }
+        var userPassword by remember { mutableStateOf("") }
+
+        var currentUserState by remember { mutableStateOf("") }
+
+
+
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Row {
+                Text(text = "Email Address")
+            }
+
+            Row {
+                OutlinedTextField(value = userEmail,
+                    onValueChange = { userEmail = it },
+                    placeholder = { Text("john@example.com") },
+                    leadingIcon = {
+                        Icon(
+                            Icons.Filled.Email,
+                            contentDescription = "Email address"
+                        )
+                    },
+                    modifier = Modifier.width(383.dp))
+            }
+            Row {
+                Text(text = "Password")
+            }
+
+            Row {
+                OutlinedTextField(value = userPassword,
+                    onValueChange = {userPassword = it},
+                    placeholder = { Text("Password123")},
+                    leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = "Password") },
+                    visualTransformation = PasswordVisualTransformation(),
+                    modifier = Modifier.width(383.dp))
+            }
+            Spacer(modifier = Modifier.padding(8.dp))
+            Button(onClick = {
+
+            },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(198, 124, 98)),
+                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier.width(383.dp)) {
+                Text(text = "Sign Up", color = Color(255, 255, 255))
+            }
+
+            Button(onClick = {
+
+            },
+                colors = ButtonDefaults.buttonColors(containerColor = Color(198, 124, 98)),
+                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier.width(383.dp))
+            {
+                Text(text = "Login", color = Color(255, 255, 255))
+            }
+
+            Button(
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
+                onClick = {
+
+                },
+                shape = RoundedCornerShape(10.dp),
+                modifier = Modifier.width(383.dp)
+            )
+            {
+                Text(text = "Logout", color = Color(255, 255, 255))
+            }
+        }
+    }
+
 
 @Composable
 fun ProfileScreen() {
-    // Контент экрана настроек
+    Text(text = "Профиль")
+    Log.e("Out", "Profile")
 }
