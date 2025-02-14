@@ -60,6 +60,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.Serializable
 
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.jpcnotes.data.network.User
 
 class MainActivity : ComponentActivity() {
 
@@ -77,18 +78,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-
-    @Serializable
-    data class Note(
-        val id: Int = 0,
-        val body: String = "")
-
-    @Serializable
-    data class User(
-        val id: Int = 0,
-        val email: String = "",
-        val password: String = ""
-    )
 
 
     @Composable
@@ -192,6 +181,7 @@ class MainActivity : ComponentActivity() {
                 is UserState.Success -> {
                     val message = (userState as UserState.Success).message
                     currentUserState = message
+                    
 
                     if(message == "User already logged in!" || message == "Logged in successfully!")
                     {

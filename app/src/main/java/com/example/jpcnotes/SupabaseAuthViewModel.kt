@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jpcnotes.data.model.UserState
+import com.example.jpcnotes.data.network.User
 //import com.example.jpcnotes.data.network.SupabaseClient.client
 import com.example.jpcnotes.utils.SharedPreferenceHelper
 import io.github.jan.supabase.auth.Auth

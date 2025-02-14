@@ -15,7 +15,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Email
@@ -24,6 +27,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.sharp.Home
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,6 +50,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
@@ -91,44 +96,41 @@ class MainActivity2: ComponentActivity() {
 fun BNBInit(navController: NavController)
 {
     Box(
-        modifier = Modifier.fillMaxWidth()
-            .height(50.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(40.dp),
         contentAlignment = Alignment.BottomCenter
     )
     {
+        val navItems = listOf(
+            BottomNavItem.Home,
+            BottomNavItem.Preps,
+            BottomNavItem.Profile
+        )
+        var selectedItem by remember {
+            mutableStateOf(navItems[0])
+        }
+
         NavigationBar {
-            NavigationBarItem(selected = false,
-                onClick = {
-                    navController.navigate("home")
-                },
-                icon = {
-                    Icon(Icons.Filled.Home,
-                        contentDescription = "Home")
-                },
-                label = { Text(text = "Главная")}
-            )
-
-            NavigationBarItem(selected = false,
-                onClick = {
-                    navController.navigate("preps")
-                },
-                icon = {
-                    Icon(Icons.Filled.List,
-                        contentDescription = "Preps")
-                },
-                label = { Text(text = "Препараты")}
-            )
-
-            NavigationBarItem(selected = false,
-                onClick = {
-                    navController.navigate("profile")
-                },
-                icon = {
-                    Icon(Icons.Filled.AccountBox,
-                        contentDescription = "Profile")
-                },
-                label = { Text(text = "Профиль")}
-            )
+            navItems.forEach{
+                item ->
+                NavigationBarItem(selected = selectedItem == item,
+                    onClick = {
+                        selectedItem = item
+                        navController.navigate(item.route)
+                              },
+                    icon = { Icon(
+                        item.icon,
+                    contentDescription = null
+                )
+                           },
+                    label = {
+                        Text(
+                            text = item.label
+                        )
+                    }
+                )
+            }
 
         }
     }
@@ -136,88 +138,22 @@ fun BNBInit(navController: NavController)
 
 @Composable
 fun HomeScreen() {
-    Text(text = "Домашний экран")
-    Log.e("Out", "Home")
+    val items =
+    LazyColumn {
+        items()
+    }
+}
+
+@Composable
+fun LcElement()
+{
+
 }
 
 @Composable
 fun PrepsScreen() {
-        val context = LocalContext.current
-
-
-        var userEmail by remember { mutableStateOf("") }
-        var userPassword by remember { mutableStateOf("") }
-
-        var currentUserState by remember { mutableStateOf("") }
-
-
-
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(8.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Row {
-                Text(text = "Email Address")
-            }
-
-            Row {
-                OutlinedTextField(value = userEmail,
-                    onValueChange = { userEmail = it },
-                    placeholder = { Text("john@example.com") },
-                    leadingIcon = {
-                        Icon(
-                            Icons.Filled.Email,
-                            contentDescription = "Email address"
-                        )
-                    },
-                    modifier = Modifier.width(383.dp))
-            }
-            Row {
-                Text(text = "Password")
-            }
-
-            Row {
-                OutlinedTextField(value = userPassword,
-                    onValueChange = {userPassword = it},
-                    placeholder = { Text("Password123")},
-                    leadingIcon = { Icon(Icons.Filled.Lock, contentDescription = "Password") },
-                    visualTransformation = PasswordVisualTransformation(),
-                    modifier = Modifier.width(383.dp))
-            }
-            Spacer(modifier = Modifier.padding(8.dp))
-            Button(onClick = {
-
-            },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(198, 124, 98)),
-                shape = RoundedCornerShape(10.dp),
-                modifier = Modifier.width(383.dp)) {
-                Text(text = "Sign Up", color = Color(255, 255, 255))
-            }
-
-            Button(onClick = {
-
-            },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(198, 124, 98)),
-                shape = RoundedCornerShape(10.dp),
-                modifier = Modifier.width(383.dp))
-            {
-                Text(text = "Login", color = Color(255, 255, 255))
-            }
-
-            Button(
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Red),
-                onClick = {
-
-                },
-                shape = RoundedCornerShape(10.dp),
-                modifier = Modifier.width(383.dp)
-            )
-            {
-                Text(text = "Logout", color = Color(255, 255, 255))
-            }
-        }
+    Text(text = "Препараты")
+    Log.e("Out", "Home")
     }
 
 
@@ -225,4 +161,10 @@ fun PrepsScreen() {
 fun ProfileScreen() {
     Text(text = "Профиль")
     Log.e("Out", "Profile")
+}
+
+sealed class BottomNavItem(val route: String, val icon: ImageVector, val selectedIcon: ImageVector, val label: String) {
+    object Home : BottomNavItem("home", Icons.Filled.Home, Icons.Filled.Home, "Главная")
+    object Preps : BottomNavItem("preps", Icons.Filled.Person, Icons.Filled.List, "Препараты")
+    object Profile : BottomNavItem("profile", Icons.Filled.AccountBox, Icons.Filled.AccountBox, "Профиль")
 }
